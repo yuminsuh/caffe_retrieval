@@ -308,7 +308,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 147 (last added: recurrent_param)
+// LayerParameter next available layer-specific ID: 155 (last added: triplet)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -405,9 +405,10 @@ message LayerParameter {
   optional TanHParameter tanh_param = 127;
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
+  optional TripletLossParameter triplet_loss_param = 155;
   optional WindowDataParameter window_data_param = 129;
 }
-//max id: 151
+//max id: 155
 
 // Message that stores parameters used to apply transformation
 // to the data layer's data
@@ -1424,3 +1425,22 @@ message PairFastLossParameter {
   }
   optional MODE mode = 4 [default = BOTH];
 }
+
+message TripletLossParameter {
+  enum SampleMethod {
+    ALL = 0;
+    HARD = 1;
+    MODERATE = 2;
+  }
+  // margin between positive similarity and negative similarity
+  optional float margin = 1 [default = 0.2];
+  // weight of triplet loss
+  optional float mu = 2 [default = 1.0];
+  // contains the very hard negative samples or not
+  optional SampleMethod negative = 3 [default = ALL];
+  // contains the very hard negative samples or not
+  optional SampleMethod positive = 4 [default = ALL];
+  // use all triplet size just for smooth gradient check
+  optional bool all_triplets = 5 [default = false];
+}
+
