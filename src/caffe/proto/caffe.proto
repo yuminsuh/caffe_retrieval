@@ -308,7 +308,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 155 (last added: triplet)
+// LayerParameter next available layer-specific ID: 160 (last added: triplet)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -364,6 +364,7 @@ message LayerParameter {
   optional ArgMaxParameter argmax_param = 103;
   optional BatchNormParameter batch_norm_param = 139;
   optional BiasParameter bias_param = 141;
+  optional CompactBilinearParameter compact_bilinear_param=160;
   optional ConcatParameter concat_param = 104;
   optional ContrastiveLossParameter contrastive_loss_param = 105;
   optional ConvolutionParameter convolution_param = 106;
@@ -1442,5 +1443,17 @@ message TripletLossParameter {
   optional SampleMethod positive = 4 [default = ALL];
   // use all triplet size just for smooth gradient check
   optional bool all_triplets = 5 [default = false];
+}
+
+message CompactBilinearParameter {
+	// compact bilinear pooling output number of channels
+	// two inputs are of size N*C1*H*W and N*C2*H*W, the output has size
+	// N*num_output*1(H)*(W), depending on whether do sum pooling. 
+	optional uint32 num_output = 1;
+	
+	// by default, do sum pooling over spatial locations.
+	// In the case of caring spatio location, such as semantic segmentation,
+	// one might don't want to be pooled spatially. 
+	optional bool sum_pool = 2 [default = true]; 
 }
 
