@@ -182,7 +182,8 @@ void OnlineTripletLossLayer<Dtype>::Forward_gpu(
   loss_data[0] = rank_loss * mu_ + pair_loss * one_minus_mu;
   // average accuracy among all triplets
   top[1]->mutable_cpu_data()[0] = Dtype(1) - (all_triplet_size > 0 ? Dtype(num_error) / all_triplet_size : 0);
-  top[2]->mutable_cpu_data()[0] = triplets_.size();
+  if(top.size()>2)
+    top[2]->mutable_cpu_data()[0] = triplets_.size();
 }
 
 template <typename Dtype>
