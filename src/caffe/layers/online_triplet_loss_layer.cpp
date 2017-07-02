@@ -51,8 +51,8 @@ void OnlineTripletLossLayer<Dtype>::Reshape(
   const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   vector<int> loss_shape(0);      // Loss layers output a scalar; 0 axes.
   top[0]->Reshape(loss_shape);    // average loss (rank_loss + pair_loss)
-  if (top.size()>1)
-    top[1]->Reshape(loss_shape);    // average accuracy rate of all triplets
+  top[1]->Reshape(loss_shape);    // average accuracy rate of all triplets
+  top[2]->Reshape(loss_shape);    // number of non-zero loss triplets
   int num = bottom[0]->num();
   dist_.Reshape(num, num, 1, 1);
   aggregator_.reset(new SyncedMemory(num * num * sizeof(Dtype)));
@@ -222,8 +222,8 @@ void OnlineTripletLossLayer<Dtype>::Forward_cpu(
   // average loss among all triplets
   loss_data[0] = rank_loss * mu_ + pair_loss * one_minus_mu;
   // average accuracy among all triplets
-  if (top.size()>1)
-    top[1]->mutable_cpu_data()[0] = Dtype(1) - (all_triplet_size > 0 ? Dtype(num_error) / all_triplet_size : 0);
+  top[1]->mutable_cpu_data()[0] = Dtype(1) - (all_triplet_size > 0 ? Dtype(num_error) / all_triplet_size : 0);
+  top[2]->mutable_cpu_data()[0] = triplets_.size();
 }
 
 template <typename Dtype>

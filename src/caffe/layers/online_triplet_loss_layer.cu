@@ -173,6 +173,7 @@ void OnlineTripletLossLayer<Dtype>::Forward_gpu(
   //original num_triplets_ is too large, but triplets_.size() would cause gradient non-smooth
   if (all_triplets)
     num_triplets_ = static_cast<Dtype>(all_triplet_size); //triplets_.size(); //
+    //printf("triplet size: %d\n", triplets_.size());
   else
     num_triplets_ = static_cast<Dtype>(triplets_.size());
   rank_loss = num_triplets_> 0 ? rank_loss / num_triplets_ : 0;
@@ -180,8 +181,8 @@ void OnlineTripletLossLayer<Dtype>::Forward_gpu(
   // average loss among all triplets
   loss_data[0] = rank_loss * mu_ + pair_loss * one_minus_mu;
   // average accuracy among all triplets
-  if (top.size()>1)
-    top[1]->mutable_cpu_data()[0] = Dtype(1) - (all_triplet_size > 0 ? Dtype(num_error) / all_triplet_size : 0);
+  top[1]->mutable_cpu_data()[0] = Dtype(1) - (all_triplet_size > 0 ? Dtype(num_error) / all_triplet_size : 0);
+  top[2]->mutable_cpu_data()[0] = triplets_.size();
 }
 
 template <typename Dtype>
