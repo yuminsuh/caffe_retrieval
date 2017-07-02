@@ -54,6 +54,7 @@ void OnlineTripletLossLayer<Dtype>::Reshape(
   top[1]->Reshape(loss_shape);    // average accuracy rate of all triplets
   if(top.size()>2)
     top[2]->Reshape(loss_shape);    // number of non-zero loss triplets
+    top[3]->Reshape(loss_shape);    // number of all triplets
   int num = bottom[0]->num();
   dist_.Reshape(num, num, 1, 1);
   aggregator_.reset(new SyncedMemory(num * num * sizeof(Dtype)));
@@ -226,6 +227,7 @@ void OnlineTripletLossLayer<Dtype>::Forward_cpu(
   top[1]->mutable_cpu_data()[0] = Dtype(1) - (all_triplet_size > 0 ? Dtype(num_error) / all_triplet_size : 0);
   if(top.size() > 2)
     top[2]->mutable_cpu_data()[0] = triplets_.size();
+    top[3]->mutable_cpu_data()[0] = all_triplet_size;
 }
 
 template <typename Dtype>
