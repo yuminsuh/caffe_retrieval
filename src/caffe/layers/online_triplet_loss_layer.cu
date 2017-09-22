@@ -186,7 +186,7 @@ void OnlineTripletLossLayer<Dtype>::Forward_gpu(
     top[2]->mutable_cpu_data()[0] = triplets_.size();
     top[3]->mutable_cpu_data()[0] = all_triplet_size;
     if(top.size()>4) {
-      top[4]->mutable_cpu_data()[0] = triplets_.size() / all_triplet_size;
+      top[4]->mutable_cpu_data()[0] = Dtype(triplets_.size()) / Dtype(all_triplet_size);
     }
   }
 }
